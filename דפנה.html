@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>הצעה לדייט</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #ffc0cb;
+      text-align: center;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    h1 {
+      color: #cc0066;
+      font-size: 40px;
+      margin-top: 80px;
+      position: relative;
+      z-index: 2;
+    }
+
+    button {
+      font-size: 150px;
+      padding: 20px 40px;
+      margin: 20px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      z-index: 2;
+      position: relative;
+    }
+
+    #yes {
+      background-color: #66cc66;
+      color: white;
+    }
+
+    #no {
+      background-color: #ff4d4d;
+      color: white;
+    }
+
+    .heart {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background-color: red;
+      transform: rotate(45deg);
+      animation: float 5s infinite ease-in;
+      opacity: 0.6;
+    }
+
+    .heart::before,
+    .heart::after {
+      content: "";
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background-color: red;
+      border-radius: 50%;
+    }
+
+    .heart::before {
+      top: -10px;
+      left: 0;
+    }
+
+    .heart::after {
+      left: -10px;
+      top: 0;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0) rotate(45deg);
+        opacity: 0.6;
+      }
+      100% {
+        transform: translateY(-800px) rotate(45deg);
+        opacity: 0;
+      }
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>האם תרצי לצאת איתי לדייט, דפנה?</h1>
+
+  <button id="yes">כן</button>
+  <button id="no">לא</button>
+
+  <canvas id="confetti-canvas"></canvas>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script>
+    const yesBtn = document.getElementById("yes");
+    const noBtn = document.getElementById("no");
+    let noClickCount = 0;
+
+    yesBtn.addEventListener("click", () => {
+      confetti({
+        particleCount: 150,
+        spread: 90,
+        origin: { y: 0.6 }
+      });
+    });
+
+    noBtn.addEventListener("click", () => {
+      noClickCount++;
+      let newSize = Math.max(1, 150 - noClickCount * 30);
+      noBtn.style.fontSize = newSize + "px";
+      yesBtn.style.fontSize = (150 + noClickCount * 30) + "px";
+      if (noClickCount >= 5) {
+        noBtn.style.display = "none";
+      }
+    });
+
+    // לבבות רקע
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.classList.add("heart");
+      heart.style.left = Math.random() * window.innerWidth + "px";
+      heart.style.bottom = "-30px";
+      heart.style.animationDuration = (3 + Math.random() * 2) + "s";
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 5000);
+    }
+
+    setInterval(createHeart, 1);
+  </script>
+</body>
+</html>
